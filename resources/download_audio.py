@@ -1,11 +1,13 @@
 import os
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+import logging
 import yt_dlp
 import uuid
 
-# Caminho do ffmpeg.exe
-#FFMPEG_PATH = r"C:\ffmpeg\bin\ffmpeg.exe"  # <<< MUITO IMPORTANTE: coloque o caminho correto aqui
+# configure logging
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
 
 def download_audio(url, output_dir="downloads"):
     try:
@@ -21,7 +23,6 @@ def download_audio(url, output_dir="downloads"):
                 'preferredcodec': 'mp3',
                 'preferredquality': '192',
             }],
-            #'ffmpeg_location': FFMPEG_PATH,  # <<< Aqui está passando o caminho do ffmpeg,
             'noplaylist': True,
             'quiet': True,
         }
@@ -33,12 +34,12 @@ def download_audio(url, output_dir="downloads"):
 
         mp3_path = os.path.join(output_dir, f"{temp_id}.mp3")
         if os.path.isfile(mp3_path):
-            print(f"Arquivo gerado: {mp3_path}")
+            logging.info(f"Arquivo gerado: {mp3_path}")
             return mp3_path, title
         else:
-            print(f"Arquivo mp3 nao encontrado: {mp3_path}")
+            logging.warning(f"Arquivo mp3 nao encontrado: {mp3_path}")
             return None, None
 
     except Exception as e:
-        print(f'Erro ao baixar audio: {e}')
+        logging.error(f'Erro ao baixar audio: {e}')
         return None, None

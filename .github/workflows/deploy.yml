@@ -20,7 +20,5 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/one_convert_bot 
-            git pull
-            docker compose down
-            docker compose up -d --build
+            cd ~/one_convert_bot
+            ./deploy.sh
